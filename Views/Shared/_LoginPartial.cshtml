@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @* --- VISTAS PARA USUARIOS AUTENTICADOS --- *@
+        <li class="nav-item">
+            <a class="nav-link text-dark" title="Gestionar">Hola, @User.Identity?.Name!</a>
+        </li>
+
+        @*  Proteger una opción por ROL directamente en el menú *@
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-danger" asp-area="" asp-controller="Admin" asp-action="Index">Panel Admin</a>
+            </li>
+        }
+
+        <li class="nav-item">
+            <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="form-inline">
+                <button type="submit" class="nav-link btn btn-link text-dark" style="border:none; background:none;">
+                    Cerrar Sesión
+                </button>
+            </form>
+        </li>
+    }
+    else
+    {
+        @* --- VISTAS PARA VISITANTES (Login / Register) --- *@
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Registrarse</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Iniciar Sesión</a>
+        </li>
+    }
+</ul>

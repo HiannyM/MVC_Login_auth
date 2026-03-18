@@ -1,0 +1,14 @@
+﻿@using MVC_Login_auth.ViewModels
+@using Microsoft.AspNetCore.Identity
+
+@{
+    ViewData["Title"] = "Panel de Administración";
+}
+
+<div class="alert alert-danger">
+    <h1>Acceso Concedido: Panel de Control</h1>
+    <p>Bienvenido, <strong>@User.Identity?.Name</strong>. Esta página solo es visible para administradores.</p>
+</div>
+
+<hr />
+<p>Aquí puedes gestionar los usuarios y roles de la aplicación.</p>
