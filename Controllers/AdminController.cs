@@ -1,11 +1,16 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVC_Login_auth.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
+
     {
+        public IActionResult Index() => View();
+
         private readonly UserManager<IdentityUser> _userManager;
 
         public AdminController(UserManager<IdentityUser> userManager)
@@ -30,5 +35,15 @@ namespace MVC_Login_auth.Controllers
 
             return Content("OK");
         }
-    }
+
+
+    // Múltiples roles (OR logic): Admin o Editor
+[Authorize(Roles = "Admin,Editor")]
+        public IActionResult EditarContenido() => View();
+
+        // AND logic: debe tener AMBOS roles
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Editor")]
+        public IActionResult SuperAcceso() => View();
+    } 
 }
