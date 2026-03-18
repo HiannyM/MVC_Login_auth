@@ -22,26 +22,32 @@ namespace MVC_Login_auth.Controllers
         public IActionResult Register() => View();
 
         // POST: /Account/Register
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (!ModelState.IsValid) return View(model);
+        public IActionResult Login() => View();
 
-            var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user, model.Password);
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            var result = await _signInManager.PasswordSignInAsync(
+                model.Email,
+                model.Password,
+                model.RememberMe,
+                true);
 
             if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
-            }
 
-            // Agregar errores al ModelState para mostrar en la vista
-            foreach (var error in result.Errors)
-                ModelState.AddModelError("", error.Description);
+            if (result.IsLockedOut)
+                ModelState.AddModelError("", "Cuenta bloqueada");
 
+            ModelState.AddModelError("", "Login inválido");
             return View(model);
+        }
+        //Logout
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

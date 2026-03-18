@@ -45,5 +45,18 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    @if (User.Identity!.IsAuthenticated)
+    {
+        <form asp-action="Logout" asp-controller="Account" method="post">
+            <span>Hola, @User.Identity.Name</span>
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    }
+    else
+    {
+        <a asp-action="Login" asp-controller="Account">Iniciar sesión</a>
+    }
+ 
 </body>
 </html>
