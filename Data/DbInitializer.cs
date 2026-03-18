@@ -31,6 +31,12 @@ namespace MVC_Login_auth.Data
                 if (result.Succeeded)
                     await userManager.AddToRoleAsync(admin, "Admin");
             }
+
+            //Crear usuario editor
+            if (!await roleManager.RoleExistsAsync("Editor"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("Editor"));
+            }
         }
     }
 }
