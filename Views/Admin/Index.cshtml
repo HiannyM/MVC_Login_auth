@@ -1,14 +1,67 @@
 ﻿@using MVC_Login_auth.ViewModels
 @using Microsoft.AspNetCore.Identity
 
+@model IEnumerable<MVC_Login_auth.ViewModels.UsuarioRoleViewModel>
+
 @{
-    ViewData["Title"] = "Panel de Administración";
+    ViewData["Title"] = "Gestión de Usuarios";
 }
 
-<div class="alert alert-danger">
-    <h1>Acceso Concedido: Panel de Control</h1>
-    <p>Bienvenido, <strong>@User.Identity?.Name</strong>. Esta página solo es visible para administradores.</p>
-</div>
+<h2 class="mb-4">Panel de Administración</h2>
 
-<hr />
-<p>Aquí puedes gestionar los usuarios y roles de la aplicación.</p>
+<table class="table table-hover shadow-sm border">
+    <thead class="table-dark">
+        <tr>
+            <th>Email</th>
+            <th>Roles Actuales</th>
+            <th class="text-center">Acciones de Rol</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="align-middle">@item.Email</td>
+                <td class="align-middle">
+                    @foreach (var rol in item.Roles)
+                    {
+                        <span class="badge bg-info text-dark">@rol</span>
+                    }
+                </td>
+                <td class="text-center align-middle">
+                    <div class="btn-group" role="group">
+
+                        @* Lógica para el rol EDITOR *@
+                        @if (!item.Roles.Contains("Editor"))
+                        {
+                            <form asp-action="AsignarEditor" asp-route-id="@item.UsuarioId" method="post" class="me-1">
+                                <button type="submit" class="btn btn-sm btn-outline-success">+ Editor</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="QuitarEditor" asp-route-id="@item.UsuarioId" method="post" class="me-1">
+                                <button type="submit" class="btn btn-sm btn-danger">- Editor</button>
+                            </form>
+                        }
+
+                        @* Lógica para el rol CLIENTE *@
+                        @if (!item.Roles.Contains("Cliente"))
+                        {
+                            <form asp-action="AsignarCliente" asp-route-id="@item.UsuarioId" method="post" class="me-1">
+                                <button type="submit" class="btn btn-sm btn-outline-primary">+ Cliente</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="QuitarCliente" asp-route-id="@item.UsuarioId" method="post">
+                                <button type="submit" class="btn btn-sm btn-warning">- Cliente</button>
+                            </form>
+                        }
+
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
